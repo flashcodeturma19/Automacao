@@ -1,6 +1,8 @@
 package AutNubank;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
+
+import java.time.Duration;
 
 import org.junit.After;
 import org.junit.Before;
@@ -12,54 +14,97 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 public class AutomacaoNubank {
-
 	WebDriver driver;
-	
+
 	@Before
 	public void setUp() throws Exception {
-		// comando para indicar qual navegador vou utilizar e qual o caminho do driver
+		
+// Conectando ao driver do Chrome		
 		System.setProperty("webdriver.chrome.driver", "./Driver/chromedriver.exe");
-		//comando paara adicionar as funçoes no chromedriver dentro do meu driver
-		driver  = new ChromeDriver();
-		//comando para indicar qual site desejamos abrir
-		driver.get("https://nubank.com.br/");
-		//comando para maximizar a tela 
+		driver = new ChromeDriver();
+
+		//Maximizar a página
 		driver.manage().window().maximize();
-		//coamando para busca um elemento e realizar a acao de preencher
-		
-		driver.findElement(By.name("cpf")).sendKeys("53307568043");
-		Thread.sleep(5000);
-		driver.findElement(By.id("test")).click();
-		driver.findElement(By.name("name")).sendKeys("Samuewl xavier");
-		driver.findElement(By.name("phone")).sendKeys("11918151712");
-		driver.findElement(By.name("email")).sendKeys("teste@teste.com.br");
-		driver.findElement(By.name("emailConfirmation")).sendKeys("teste@teste.com.br");
-		driver.findElement(By.xpath("//*[@id=\"label-acceptedWhatsapp\"]/span[2]/span")).click();
-		driver.findElement(By.xpath("//*[@id=\"label-accepted\"]/span[2]/span")).click();
-		
-		WebElement elemento  = driver.findElement(By.xpath("//*[@id=\"complete-form-drawer\"]/div/div/div[2]/form/div/div[2]/div/button"));
-		JavascriptExecutor js = (JavascriptExecutor) driver;
-		 js.executeScript("arguments[0].scrollIntoView(true);", elemento);
-		 Thread.sleep(5000);
-		 elemento.click();
-		
+	       
 	}
 
 	@After
 	public void tearDown() throws Exception {
-//	driver.quit();
+		 // Fechar o navegador
+        Thread.sleep(1000);
+      //  driver.quit();
+
 	}
 
 	@Test
-	public void validacaoNubank() {
-		String texto;
+	public void test() throws InterruptedException {
 		
-		//comando para buscar o elemento e pegar otexto do elemento e guardar na variavel texto
-		texto = driver.findElement(By.xpath("//*[@id=\"short-form\"]/h3")).getText();
+		 // Navegar até a página do 4devs para gerar dados
+        driver.get("https://www.4devs.com.br/");       
 		
-		//coamndo para validar te o texto que passei como parametro e o texto em tela sao iguais
-		assertEquals("Peça sua conta e cartão de crédito do Nubank", texto);
-		driver.findElement(By.id("test")).click();
+		 // Extrair dados do site 4devs
+		
+        WebElement GeradodepElement = driver.findElement(By.xpath("	//*[@id=\"top-nav\"]/li[23]/a"));
+        JavascriptExecutor js = (JavascriptExecutor)driver;
+        js.executeScript("arguments[0].scrollIntoView(true);",GeradodepElement);
+        GeradodepElement.click();
+        
+        WebElement BotaoGeraPessoas = driver.findElement(By.id("bt_gerar_pessoa"));
+        JavascriptExecutor gp = (JavascriptExecutor)driver;
+        gp.executeScript("arguments[0].scrollIntoView(true);",BotaoGeraPessoas);
+        BotaoGeraPessoas.click();
+        
+        WebElement cpfElement = driver.findElement(By.id("cpf"));
+        String cpf = cpfElement.getText();
+        JavascriptExecutor CPF = (JavascriptExecutor)driver;
+        CPF.executeScript("arguments[0].scrollIntoView(true);",cpfElement);
+        
+        WebElement NomeElement = driver.findElement(By.id("nome"));
+        String Nome = NomeElement.getText();
+        JavascriptExecutor n = (JavascriptExecutor)driver;
+        n.executeScript("arguments[0].scrollIntoView(true);",NomeElement);
+        
+        WebElement telefoneElement = driver.findElement(By.id("celular"));
+        String telefone = telefoneElement.getText();
+        JavascriptExecutor t = (JavascriptExecutor)driver;
+        t.executeScript("arguments[0].scrollIntoView(true);",telefoneElement);
+        
+        WebElement emailElement = driver.findElement(By.id("email"));
+        String email = emailElement.getText();
+        JavascriptExecutor e = (JavascriptExecutor)driver;
+        e.executeScript("arguments[0].scrollIntoView(true);",emailElement);
+
+        
+        // Navegar até a página de registro do Nubank
+
+        driver.get("https://www.nubank.com.br/");
+        
+        // Preencher o formulário do Nubank com os dados gerados
+	    Thread.sleep(800);
+        WebElement cpfInput = driver.findElement(By.name("cpf"));
+        cpfInput.sendKeys(cpf);
+        driver.findElement(By.id("test")).click();
+	    Thread.sleep(800);
+        WebElement nomeInput = driver.findElement(By.name("name"));
+        nomeInput.sendKeys(Nome);
+	    Thread.sleep(800);
+        WebElement telefoneInput = driver.findElement(By.name("phone"));
+        telefoneInput.sendKeys(telefone);
+	    Thread.sleep(800);
+        WebElement emailInput = driver.findElement(By.name("email"));
+        emailInput.sendKeys(email);
+	    Thread.sleep(800);
+        WebElement emailcInput = driver.findElement(By.name("emailConfirmation"));
+        emailcInput.sendKeys(email);
+	    Thread.sleep(800);
+        driver.findElement(By.xpath("//*[@id=\"label-acceptedWhatsapp\"]/span[2]/span")).click();
+        JavascriptExecutor cb = (JavascriptExecutor)driver;
+        cb.executeScript("0,100");
+        driver.findElement(By.xpath("//*[@id=\"label-accepted\"]/span[2]/span")).click();
+        cb.executeScript("0,100");
+        driver.findElement(By.xpath("//*[@id=\"complete-form-drawer\"]/div/div/div[2]/form/div/div[2]/div/button")).click();
+        
+       
 	}
 
 }
