@@ -1,24 +1,31 @@
 package Metodos;
 
+import static org.junit.Assert.assertEquals;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 
 public class Metodos {
-	
-	WebDriver driver;
-	
-	public void Preencher(String texto, By element) {
-		driver.findElement(element).sendKeys(texto);
-		
-	}
-	public void abrirNavegador() {
-		System.setProperty("webdriver.chrome.driver", "./Driver/chromedriver.exe");
-		driver = new ChromeDriver();
+    WebDriver driver;
+    
+    public Metodos(WebDriver driver) {
+        this.driver = driver;
+    }
 
-		//Maximizar a página
-		driver.manage().window().maximize();
-		driver.get("https://nubank.com.br/");
-	}
+    public void preencher(String texto, By element) {
+        driver.findElement(element).sendKeys(texto);
+    }
+    
+    public void abrirNavegador(String url) {
+        driver.manage().window().maximize();
+        driver.get(url);
+    }
 
+    public void click(By elemento) {
+        driver.findElement(elemento).click();
+    }
+
+    public void validacaoTexto(By elmento, String texto) {
+        String textoesperado = driver.findElement(elmento).getText();
+        assertEquals(textoesperado, texto);
+    }
 }
